@@ -3,20 +3,21 @@ package ru.gb.lesson1.Chat;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Objects;
 
 public class Client extends JFrame {
     private static final int WINDOW_HEIGHT = 555;
     private static final int WINDOW_WIDTH = 507;
     private static final int WINDOW_POSX = 800;
     private static final int WINDOW_POSY = 300;
+    Server server;
+
     JButton btnSendMsg, btnLogIn;
     JTextField textFieldMsg, textIP, textPort, textLogin, textPass;
     JTextArea textArea = new JTextArea();
     JScrollPane scrollPane;
     String login = "";
 
-    Client() {
+    Client(Server server) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocation(WINDOW_POSX, WINDOW_POSY);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -25,9 +26,9 @@ public class Client extends JFrame {
         textArea.setLineWrap(true);
         textFieldMsg = new JTextField();
         JPanel panelLogin = new JPanel(new BorderLayout());
-        JPanel panelForm = new JPanel(new GridLayout(2,2));
+        JPanel panelForm = new JPanel(new GridLayout(2, 2));
         btnLogIn = new JButton("Login");
-        textIP = new JTextField("IP");
+        textIP = new JTextField("Your IP");
         textPort = new JTextField("Port");
         textLogin = new JTextField("Login");
         textPass = new JPasswordField("Password");
@@ -47,13 +48,20 @@ public class Client extends JFrame {
         panelMsg.add(textFieldMsg, BorderLayout.CENTER);
         panelMsg.add(btnSendMsg, BorderLayout.EAST);
         add(panelMsg, BorderLayout.SOUTH);
+        setVisible(true);
+
 
         btnSendMsg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textArea.append(textFieldMsg.getText() + "\n");
-                textFieldMsg.setText("");
-                textFieldMsg.requestFocus(true);
+                if (!textFieldMsg.getText().equals("")) {
+                    textArea.append(login + ": " + textFieldMsg.getText() + "\n");
+                    if (server.isWork) {
+                        server.textArea.append(login + ": " + textFieldMsg.getText() + "\n");
+                    }
+                    textFieldMsg.setText("");
+                    textFieldMsg.requestFocus(true);
+                }
             }
         });
 
@@ -61,10 +69,11 @@ public class Client extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String s = e.getActionCommand();
-                if(s.equals("Login")){
+                if (s.equals("Login")) {
                     login = textLogin.getText();
                     panelLogin.setVisible(false);
-                    textArea.append("Привет " + login);
+                    setTitle("Chat Client" + " [" + login + "]");
+                    textArea.append("Привет " + login + "\n");
                 }
             }
         });
@@ -77,8 +86,11 @@ public class Client extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
-                if (key == KeyEvent.VK_ENTER) {
-                    textArea.append(textFieldMsg.getText() + "\n");
+                if (key == KeyEvent.VK_ENTER && !textFieldMsg.getText().equals("")) {
+                    textArea.append(login + ": " + textFieldMsg.getText() + "\n");
+                    if (server.isWork) {
+                        server.textArea.append(login + ": " + textFieldMsg.getText() + "\n");
+                    }
                     textFieldMsg.setText("");
                     textFieldMsg.requestFocus(true);
                 }
@@ -89,36 +101,65 @@ public class Client extends JFrame {
             }
         });
 
-        textIP.addMouseListener(new MouseAdapter() {
+        textIP.addFocusListener(new FocusAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(textIP.getText(), "IP")){
+            public void focusGained(FocusEvent e) {
+                if (textIP.getText().equals("Your IP")) {
                     textIP.setText("");
-                }else return;
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textIP.getText().equals("")) {
+                    textIP.setText("Your IP");
+                }
             }
         });
-        textPort.addMouseListener(new MouseAdapter() {
+        textPort.addFocusListener(new FocusAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(textPort.getText(), "Port")){
+            public void focusGained(FocusEvent e) {
+                if (textPort.getText().equals("Port")) {
                     textPort.setText("");
-                }else return;
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textPort.getText().equals("")) {
+                    textPort.setText("Port");
+                }
             }
         });
-        textLogin.addMouseListener(new MouseAdapter() {
+        textLogin.addFocusListener(new FocusAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(textLogin.getText(), "Login")){
+            public void focusGained(FocusEvent e) {
+                if (textLogin.getText().equals("Login")) {
                     textLogin.setText("");
-                }else return;
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textLogin.getText().equals("")) {
+                    textLogin.setText("Login");
+                }
             }
         });
-        textPass.addMouseListener(new MouseAdapter() {
+
+        textPass.addFocusListener(new FocusAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if(Objects.equals(textPass.getText(), "Password")){
+            public void focusGained(FocusEvent e) {
+                if (textPass.getText().equals("Password")) {
                     textPass.setText("");
-                }else return;
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textPass.getText().equals("")) {
+                    textPass.setText("Password");
+                }
             }
         });
     }
