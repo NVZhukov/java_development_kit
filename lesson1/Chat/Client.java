@@ -54,13 +54,19 @@ public class Client extends JFrame {
         btnSendMsg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!textFieldMsg.getText().equals("")) {
-                    textArea.append(login + ": " + textFieldMsg.getText() + "\n");
-                    if (server.isWork) {
-                        server.textArea.append(login + ": " + textFieldMsg.getText() + "\n");
+                String msg = login + ": " + textFieldMsg.getText() + "\n";
+                if (!login.equals("")) {
+                    if (!textFieldMsg.getText().equals("")) {
+                        textArea.append(msg);
+                        if (server.isWork) {
+                            server.saveToFile(msg);
+                            server.textArea.append(msg);
+                        }
+                        textFieldMsg.setText("");
+                        textFieldMsg.requestFocus(true);
                     }
-                    textFieldMsg.setText("");
-                    textFieldMsg.requestFocus(true);
+                } else {
+                    textArea.append("Сначала надо залогиниться!\n");
                 }
             }
         });
@@ -70,10 +76,18 @@ public class Client extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String s = e.getActionCommand();
                 if (s.equals("Login")) {
-                    login = textLogin.getText();
-                    panelLogin.setVisible(false);
-                    setTitle("Chat Client" + " [" + login + "]");
-                    textArea.append("Привет " + login + "\n");
+                    if (server.isWork) {
+                        server.getHistory();
+                        login = textLogin.getText();
+                        panelLogin.setVisible(false);
+                        setTitle("Chat Client" + " [" + login + "]");
+                        textArea.append("Привет " + login + "\n");
+                    } else {
+                        login = textLogin.getText();
+                        panelLogin.setVisible(false);
+                        setTitle("Chat Client" + " [" + login + "]");
+                        textArea.append("Привет " + login + "\n");
+                    }
                 }
             }
         });
@@ -86,13 +100,19 @@ public class Client extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
+                String msg = login + ": " + textFieldMsg.getText() + "\n";
                 if (key == KeyEvent.VK_ENTER && !textFieldMsg.getText().equals("")) {
-                    textArea.append(login + ": " + textFieldMsg.getText() + "\n");
-                    if (server.isWork) {
-                        server.textArea.append(login + ": " + textFieldMsg.getText() + "\n");
+                    if (!login.equals("")) {
+                        textArea.append(msg);
+                        if (server.isWork) {
+                            server.textArea.append(msg);
+                            server.saveToFile(msg);
+                        }
+                        textFieldMsg.setText("");
+                        textFieldMsg.requestFocus(true);
+                    } else {
+                        textArea.append("Сначала надо залогиниться!\n");
                     }
-                    textFieldMsg.setText("");
-                    textFieldMsg.requestFocus(true);
                 }
             }
 

@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Server extends JFrame {
     private static final int WINDOW_HEIGHT = 555;
@@ -15,6 +19,8 @@ public class Server extends JFrame {
 
     JButton btnStart, btnStop;
     JTextArea textArea = new JTextArea();
+
+    File log = new File("log.txt");
 
     Server() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -56,5 +62,34 @@ public class Server extends JFrame {
                 }
             }
         });
+    }
+
+    void saveToFile(String msg) {
+        try {
+            FileWriter fw = new FileWriter(log, true);
+            DateFormat dateF = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Calendar cal = Calendar.getInstance();
+            String time = dateF.format(cal.getTime());
+            fw.write(time + " " + msg);
+            fw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getHistory() {
+        if (log.isFile()) {
+            try {
+                FileReader fr = new FileReader(log);
+                BufferedReader br = new BufferedReader(fr);
+                String line = br.readLine();
+                while (line != null) {
+                    client.textArea.append(line + "\n");
+                    line = br.readLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
