@@ -1,4 +1,7 @@
 package ru.gb.lesson2.server;
+import ru.gb.lesson2.server.client.Client;
+import ru.gb.lesson2.server.client.ClientGUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +18,7 @@ public class ServerWindow extends JFrame {
     public static final int HEIGHT = 300;
     public static final String LOG_PATH = "src/ru/gb/lesson2/server/log.txt";
 
-    List<ClientGUI> clientGUIList;
+    List<Client> clientGUIList;
 
     JButton btnStart, btnStop;
     JTextArea log;
@@ -35,11 +38,11 @@ public class ServerWindow extends JFrame {
         setVisible(true);
     }
 
-    public boolean connectUser(ClientGUI clientGUI){
+    public boolean connectUser(Client client){
         if (!work){
             return false;
         }
-        clientGUIList.add(clientGUI);
+        clientGUIList.add(client);
         return true;
     }
 
@@ -47,14 +50,14 @@ public class ServerWindow extends JFrame {
         return readLog();
     }
 
-    public void disconnectUser(ClientGUI clientGUI){
-        clientGUIList.remove(clientGUI);
-        if (clientGUI != null){
-            clientGUI.disconnectFromServer();
+    public void disconnectUser(Client client){
+        clientGUIList.remove(client);
+        if (client != null){
+            client.disconnect();
         }
     }
 
-    public void message(String text) {
+    public void sendMessage(String text) {
         if (!work){
             return;
         }
