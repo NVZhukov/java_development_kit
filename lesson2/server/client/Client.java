@@ -1,16 +1,16 @@
 package ru.gb.lesson2.server.client;
 
-import ru.gb.lesson2.server.ServerWindow;
+import ru.gb.lesson2.server.server.Server;
 
 public class Client {
     private String name;
     private ClientView clientView;
-    private ServerWindow server;
+    private Server server;
     private boolean connected;
 
-    public Client(ClientView clientView, ServerWindow serverWindow) {
+    public Client(ClientView clientView, Server server) {
         this.clientView = clientView;
-        this.server = serverWindow;
+        this.server = server;
     }
 
     public boolean connectToServer(String name){

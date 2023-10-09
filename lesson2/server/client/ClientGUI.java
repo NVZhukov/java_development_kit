@@ -1,6 +1,6 @@
 package ru.gb.lesson2.server.client;
 
-import ru.gb.lesson2.server.ServerWindow;
+import ru.gb.lesson2.server.server.Server;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +9,8 @@ import java.awt.event.*;
 public class ClientGUI extends JFrame implements ClientView {
     public static final int WIDTH = 400;
     public static final int HEIGHT = 300;
+    private static final int WINDOW_POSX = 500;
+    private static final int WINDOW_POSY = 300;
 
     JTextArea log;
     JTextField tfIPAddress, tfPort, tfLogin, tfMessage;
@@ -18,13 +20,13 @@ public class ClientGUI extends JFrame implements ClientView {
 
     private Client client;
 
-    public ClientGUI(ServerWindow server) {
+    public ClientGUI(Server server) {
         this.client = new Client(this, server);
 
         setSize(WIDTH, HEIGHT);
         setResizable(false);
         setTitle("Chat client");
-        setLocation(server.getX() - 500, server.getY());
+        setLocation(WINDOW_POSX,WINDOW_POSY);
 
         createPanel();
 
