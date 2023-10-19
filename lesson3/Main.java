@@ -2,6 +2,7 @@ package ru.gb.lesson3;
 
 public class Main {
     public static void main(String[] args) {
+        double res = Calculator.divide(6,1.5);
         System.out.println(Calculator.sum(13L, 22.1));
         System.out.println(Calculator.multiply(13, 22f));
         System.out.println(Calculator.divide(12, 25f));
